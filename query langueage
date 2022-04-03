@@ -1,0 +1,52 @@
+作业1: 展示电影 ID 为 2116 这部电影各年龄段的平均影评分。
+命令：
+select age,avg(rate)as avg_rate
+from t_user u join t_rating r
+on u.userid=r.userid
+where r.movieid=2116
+group by u.age;
+
+
+作业2: 找出男性评分最高且评分次数超过 50 次的 10 部电影，展示电影名，平均影评分和评分次数。
+命令：
+select "M" as sex,m.moviename as moviename,avg(r.rate) as avgrate,count(m.moviename) as total
+from t_rating r
+join t_user u
+on r.userid=u.userid
+join t_movie m
+on r.movieid=m.movieid
+where u.sex="M"
+group by m.moviename
+having total >=50
+order by avgrate desc
+limit 10;
+
+
+作业3: 找出影评次数最多的女士所给出最高分的 10 部电影的平均影评分，展示电影名和平均影评分（可使用多行 SQL）。
+命令：
+select r.userid,count(r.userid) as total
+from t_rating r join t_user u
+on r.userid=u.userid
+where u.sex="F"
+group by r.userid
+order by total desc
+limit 1;
+
+create table cxp_answer3 as
+select r.movieid as movieid,r.rate as rate
+from t_rating r
+where r.userid=1150
+order by rate desc
+limit 10;
+
+select * from cxp_answer3;
+
+create table cxp_answer3_2 as
+select r.movieid as movieid,m.moviename as moviename,avg(r.rate) as avgrate
+from cxp_answer3 a join t_rating r
+on a.movieid=r.movieid
+join t_movie m
+on r.movieid=m.movieid
+group by r.movieid,m.moviename;
+
+select * from cxp_answer3_2;
